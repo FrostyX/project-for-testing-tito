@@ -1,0 +1,1610 @@
+'\" t
+.\"     Title: enum
+.\"    Author: [see the "AUTHORS" section]
+.\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
+.\"      Date: 02/02/2012
+.\"    Manual: enum 1.1
+.\"    Source: enum 1.1
+.\"  Language: English
+.\"
+.TH "ENUM" "1" "02/02/2012" "enum 1\&.1" "enum 1\&.1"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+enum \- seq\- and jot\-like enumerator
+.SH "SYNOPSIS"
+.SS "GENERAL"
+.sp
+\fBenum\fR [ \fIOPTIONS\fR ] \fILEFT\fR \fB\&.\&.\fR \fICOUNT\fR\fBx\fR \fISTEP\fR \fB\&.\&.\fR \fIRIGHT\fR
+.SS "SHORTCUTS"
+.sp
+\fBenum\fR [ \fIOPTIONS\fR ] \fILEFT\fR \fISTEP\fR \fIRIGHT\fR
+.sp
+\fBenum\fR [ \fIOPTIONS\fR ] \fILEFT\fR \fIRIGHT\fR
+.sp
+\fBenum\fR [ \fIOPTIONS\fR ] \fIRIGHT\fR
+.sp
+\&...
+.SH "DESCRIPTION"
+.sp
+\fBenum\fR enumerates values (numbers) from \fILEFT\fR to \fIRIGHT\fR adding/subtracting \fISTEP\fR each time\&. If \fISTEP\fR is not provided a value is implied\&. No more than \fICOUNT\fR values are printed\&. Before printing, values are passed through a formatter\&. Please see \fBOPTIONS\fR for details on controlling the formatter or \fBEXAMPLES\fR for use cases\&.
+.sp
+Further \fBenum\fR usage details are covered in \fBUSAGE IN DETAIL\fR\&.
+.SH "EXAMPLES"
+.SS "USE IN FOR\-LOOPS"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+for i in $(enum \-e 1 20); do
+    touch file_${i}
+done
+.fi
+.if n \{\
+.RE
+.\}
+.SS "USE FOR RANDOM NUMBERS"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+number=$(enum \-\-random 3 \&.\&. 10)
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+instead of native Bash like
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+f() { min=$1; max=$2; echo $((RANDOM * (max \- min + 1) / 32767 + min)); }
+number=$(f 3 10)
+.fi
+.if n \{\
+.RE
+.\}
+.SS "SHOWING AN ASCII TABLE"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+enum \-f \*(Aq[%3i] "%c"\*(Aq 0 127
+.fi
+.if n \{\
+.RE
+.\}
+.SH "OPTIONS"
+.SS "RANDOM MODE"
+.PP
+\fB\-r\fR, \fB\-\-random\fR
+.RS 4
+Produces random numbers (potentially with duplicates) instead of monotonic sequences\&.
+.RE
+.PP
+\fB\-i\fR, \fB\-\-seed\fR=\fINUMBER\fR
+.RS 4
+Pass
+\fINUMBER\fR
+as initializer to the random number generator\&. By default, the RNG is initialized from the current time and the process ID of the running instance of
+\fBenum\fR\&.
+.RE
+.SS "FORMATTING"
+.PP
+\fB\-b\fR, \fB\-\-dumb\fR=\fITEXT\fR
+.RS 4
+Overrides the output format to
+\fITEXT\fR
+without interpolating placeholders\&. For instance,
+\fBenum \-b "foo % 10" 3x\fR
+produces the string "foo % 10" three times\&.
+.RE
+.PP
+\fB\-c\fR, \fB\-\-characters\fR
+.RS 4
+Overrides the output format to
+%c
+producing characters\&. For example,
+\fBenum \-c 65 67\fR
+produces the letters "A", "B" and "C"\&.
+.RE
+.PP
+\fB\-e\fR, \fB\-\-equal\-width\fR
+.RS 4
+Equalize width by padding with leading zeroes\&. NOTE: In the case of mixed negative and non\-negative numbers (e\&.g\&. with
+\fBenum \-e \(em \-10 1\fR), non\-negative values will compensate for the lack of a leading minus with an extra zero to be of equal width\&.
+.RE
+.PP
+\fB\-f\fR, \fB\-\-format\fR=\fIFORMAT\fR
+.RS 4
+Overrides the default output format with
+\fIFORMAT\fR\&. For details on allowed formats please see printf(3)\&.
+
+\fIFORMAT\fR
+is subject to processing of C escape sequences (e\&.g\&. "\en" makes a newline)\&. If
+\fIFORMAT\fR
+does not contain any placeholders,
+\fBenum\fR
+will print
+\fIFORMAT\fR
+repeatedly\&. In contrast, jot would have appended the number\(cqs value instead\&. To make numbers appear at the end with
+\fBenum\fR, adjust
+\fIFORMAT\fR
+appropriately\&.
+.RE
+.PP
+\fB\-l\fR, \fB\-\-line\fR
+.RS 4
+Shortcut for "\fB\-s \*(Aq \*(Aq\fR" which means having a space instead of a newline as separator\&.
+.RE
+.PP
+\fB\-n\fR, \fB\-\-omit\-newline\fR
+.RS 4
+Omits the terminating string (defaults to newline) from output, i\&.e\&. it\(cqs a shortcut to "\fB\-t \*(Aq\*(Aq\fR"\&.
+.RE
+.PP
+\fB\-p\fR, \fB\-\-precision\fR=\fICOUNT\fR
+.RS 4
+Overrides automatic selection of precision to print
+\fICOUNT\fR
+decimal places, e\&.g\&. "0\&.100" for
+\fICOUNT\fR
+= 3\&. By default, the number of digits to print is computed from the arguments given and the (given or computed) step size\&.
+.RE
+.PP
+\fB\-s\fR, \fB\-\-separator\fR=\fITEXT\fR
+.RS 4
+Overrides the separator that is printed between values\&. By default, values are separated by a newline\&.
+\fITEXT\fR
+is subject to processing of C escape sequences (e\&.g\&. "\en" makes a newline)\&.
+.RE
+.PP
+\fB\-t\fR, \fB\-\-terminator\fR=\fITEXT\fR
+.RS 4
+Overrides the terminator that is printed in the very end\&. Default is a newline\&.
+\fITEXT\fR
+is subject to processing of C escape sequences (e\&.g\&. "\en" makes a newline)\&.
+.RE
+.PP
+\fB\-w\fR, \fB\-\-word\fR=\fIFORMAT\fR
+.RS 4
+Alias for \-\-format, for compatibility with jot\&. For GNU seq\(cqs
+\fB\-w\fR
+meaning
+\fB\-\-equal\-width\fR, see
+\fB\-e\fR\&.
+.RE
+.PP
+\fB\-z\fR, \fB\-\-zero\fR, \fB\-\-null\fR
+.RS 4
+Print null bytes as separator, not a newline\&.
+.RE
+.SS "OTHER"
+.PP
+\fB\-h\fR, \fB\-\-help\fR
+.RS 4
+Outputs usage information and exits with code 0 (success)\&.
+.RE
+.PP
+\fB\-V\fR, \fB\-\-version\fR
+.RS 4
+Displays version information and exits with code 0 (success)\&.
+.RE
+.SH "USAGE IN DETAIL"
+.SS "ARGUMENTS"
+.sp
+The logic of \fBenum\fR\*(Aqs command line parameters is:
+.sp
+\fBenum\fR [ \fIOPTIONS\fR ] \fILEFT\fR \fB\&.\&.\fR \fICOUNT\fR\fBx\fR \fISTEP\fR \fB\&.\&.\fR \fIRIGHT\fR
+.sp
+Four arguments are involved:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fILEFT\fR, the value to start enumeration with
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fICOUNT\fR, the (maximum) number of values to produce
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fISTEP\fR, the gap from one value to another
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fIRIGHT\fR, the value to stop enumeration at (in some cases before)
+.RE
+.sp
+Not all four arguments are needed, though specifying all four is possible\&. For a list of all valid combinations see \fBVALID COMBINATIONS\fR below\&. Details on derivation of defaults are addressed in \fBDERIVATION OF DEFAULTS\fR\&.
+.SS "VALID COMBINATIONS"
+.sp
+With four arguments:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBenum\fR
+\fILEFT\fR
+\fB\&.\&.\fR
+\fICOUNT\fR\fBx\fR
+\fISTEP\fR
+\fB\&.\&.\fR
+\fIRIGHT\fR
+.RE
+.sp
+With three arguments:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBenum\fR
+\fILEFT\fR
+\fICOUNT\fR\fBx\fR
+\fIRIGHT\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBenum\fR
+\fILEFT\fR
+\fB\&.\&.\fR
+\fICOUNT\fR\fBx\fR
+\fISTEP\fR
+\fB\&.\&.\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBenum\fR
+\fB\&.\&.\fR
+\fICOUNT\fR\fBx\fR
+\fISTEP\fR
+\fB\&.\&.\fR
+\fIRIGHT\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBenum\fR
+\fILEFT\fR
+\fB\&.\&.\fR
+\fICOUNT\fR\fBx\fR
+\fB\&.\&.\fR
+\fIRIGHT\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBenum\fR
+\fILEFT\fR
+\fB\&.\&.\fR
+\fISTEP\fR
+\fB\&.\&.\fR
+\fIRIGHT\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBenum\fR
+\fILEFT\fR
+\fISTEP\fR
+\fIRIGHT\fR
+(for GNU seq compatibility)
+.RE
+.sp
+With two arguments:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBenum\fR
+\fB\&.\&.\fR
+\fICOUNT\fR\fBx\fR
+\fISTEP\fR
+\fB\&.\&.\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBenum\fR
+\fB\&.\&.\fR
+\fICOUNT\fR\fBx\fR
+\fB\&.\&.\fR
+\fIRIGHT\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBenum\fR
+\fICOUNT\fR\fBx\fR
+\fB\&.\&.\fR
+\fIRIGHT\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBenum\fR
+\fB\&.\&.\fR
+\fISTEP\fR
+\fB\&.\&.\fR
+\fIRIGHT\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBenum\fR
+\fILEFT\fR
+\fB\&.\&.\fR
+\fICOUNT\fR\fBx\fR
+\fB\&.\&.\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBenum\fR
+\fILEFT\fR
+\fB\&.\&.\fR
+\fISTEP\fR
+\fB\&.\&.\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBenum\fR
+\fILEFT\fR
+\fB\&.\&.\fR
+\fIRIGHT\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBenum\fR
+\fILEFT\fR
+\fIRIGHT\fR
+(for GNU seq compatibility)
+.RE
+.sp
+With one argument:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBenum\fR
+\fB\&.\&.\fR
+\fISTEP\fR
+\fB\&.\&.\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBenum\fR
+\fB\&.\&.\fR
+\fICOUNT\fR\fBx\fR
+\fB\&.\&.\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBenum\fR
+\fB\&.\&.\fR
+\fIRIGHT\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBenum\fR
+\fIRIGHT\fR
+(for GNU seq compatibility)
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBenum\fR
+\fILEFT\fR
+\fB\&.\&.\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBenum\fR
+\fICOUNT\fR\fBx\fR
+.RE
+.sp
+With less than three arguments, defaults apply\&. Details are described in \fBDERIVATION OF DEFAULTS\fR below\&.
+.sp
+Technically, more use cases are possible\&. For instance, \fICOUNT\fR\fBx\fR \fISTEP\fR \fB\&.\&.\fR \fIRIGHT\fR is unambiguous since the order of arguments is fixed\&. Yet, "enum 3x 4 \&.\&. 10" reads a lot like "3 values between 4 and 10" while it actually would mean "3 values up to 10 in steps of 4"\&. In order to keep enum\(cqs user interface as intuitive as possible, cases which could lead to misunderstandings are not implemented\&.
+.SS "DERIVATION OF DEFAULTS"
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBAUTO-SELECTION OF PRECISION\fR
+.RS 4
+.sp
+\fBenum\fR distinguishes between "2", "2\&.0", "2\&.00" and so on:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# enum 1 2
+1
+2
+
+# enum 1 2\&.0
+1\&.0
+1\&.1
+[\&.\&.]
+1\&.9
+2\&.0
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Also, if the derived step has more decimal places than the specified values for \fILEFT\fR and \fIRIGHT\fR, the output precision will be raised to that of the step value:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# enum 1 \&.\&. 3x \&.\&. 2
+1\&.0
+1\&.5
+2\&.0
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+A specified precision always takes precedence, though:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# enum \-p 2 1 \&.\&. 3x \&.\&. 2
+1\&.00
+1\&.50
+2\&.00
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBARGUMENT DEFAULTS\fR
+.RS 4
+.sp
+In general, three arguments are needed; any three imply the fourth\&. This equation brings them together:
+.sp
+\fILEFT\fR + (\fICOUNT\fR \- 1) * \fISTEP\fR = \fIRIGHT\fR
+.sp
+If you specify less than three of them (see \fBVALID COMBINATIONS\fR), the unspecified ones are derived or set to their defaults:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fILEFT\fR
+defaults to 1 (unless
+\fISTEP\fR
+and
+\fIRIGHT\fR
+are specified, see
+\fBDERIVATION OF LEFT\fR
+below)
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fICOUNT\fR
+is infinity, unless it can be derived from the other three values\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fISTEP\fR
+defaults to 1, unless it can be derived\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fIRIGHT\fR
+is +/\-infinity, unless it can be derived from the other three values\&.
+.RE
+.sp
+Obviously, if \fICOUNT\fR is set to zero (\fB0x\fR), enum will output nothing, regardless of the other arguments\&.
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBDERIVATION OF LEFT\fR
+.RS 4
+.sp
+In general, \fILEFT\fR defaults to 1:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# enum \&.\&. 3
+1
+2
+3
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+If \fISTEP\fR and \fIRIGHT\fR is given, it is derived as
+.sp
+\fILEFT\fR = \fIRIGHT\fR \- \fISTEP\fR * floor(\fIRIGHT\fR / \fISTEP\fR)
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# enum \&.\&. 4 \&.\&. 10
+2
+6
+10
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+If, in addition to \fISTEP\fR and \fIRIGHT\fR, \fICOUNT\fR is given, it is derived as:
+.sp
+\fILEFT\fR = \fIRIGHT\fR \- (\fICOUNT\fR \- 1) * \fISTEP\fR
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# enum \&.\&. 2x 4 \&.\&. 10
+6
+10
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.SS "GENERATION OF VALUES"
+.sp
+When a custom step is requested, values are produced as follows:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+value[0] = LEFT + 0 * STEP
+value[1] = LEFT + 1 * STEP
+\&.\&.
+value[i] = LEFT + i * STEP
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Otherwise, to avoid imprecision adding up, values are produced as follows:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+value[0] = LEFT + (RIGHT \- LEFT) / (COUNT \- 1) * 0
+value[1] = LEFT + (RIGHT \- LEFT) / (COUNT \- 1) * 1
+\&.\&.
+value[i] = LEFT + (RIGHT \- LEFT) / (COUNT \- 1) * i
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Production stops when either \fICOUNT\fR values have been produced or \fIRIGHT\fR has been reached, whichever hits first\&. When all four values are given in perfect match they hit at the same time\&.
+.SH "RANDOM MODE"
+.sp
+Basically, random mode differs in these regards:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+Produced values are random\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+Argument
+\fICOUNT\fR
+defaults to 1 (one)\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+Argument
+\fILEFT\fR
+(always!) defaults to 1 (one)\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+Argument
+\fIRIGHT\fR
+is required: Random does not mix with infinity\&.
+.RE
+.sp
+This section covers these differences in detail\&.
+.SS "COUNT DEFAULTS TO 1 (ONE)"
+.sp
+In random mode only one value is produced, by default:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# enum 1 4
+1
+2
+3
+4
+
+# enum \-r 1 4
+3
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+By specifying \fICOUNT\fR you can produce more values at a time:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# enum \-r 1 \&.\&. 3x \&.\&. 4
+2
+1
+3
+.fi
+.if n \{\
+.RE
+.\}
+.SS "LEFT ALWAYS DEFAULTS TO 1 (ONE)"
+.sp
+When you need increasing numbers up to a certain maximum (say 10), each separated by a certain step (say 4) you can let \fBenum\fR calculate the needed starting value for you:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# enum \&.\&. 4 \&.\&. 10
+2
+6
+10
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+In random mode \fILEFT\fR is never calculated and defaults to 1 (one):
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# enum \-r \&.\&. 5x 4 \&.\&. 10
+1
+1
+9
+1
+5
+.fi
+.if n \{\
+.RE
+.\}
+.SS "RANDOM DOES NOT MIX WITH INFINITY"
+.sp
+In general, \fBenum\fR supports running towards infinity:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# enum 1 \&.\&. 2\&.0 \&.\&.
+1\&.0
+3\&.0
+5\&.0
+[\&.\&.]
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+However, in random mode \fBenum\fR would now produce random numbers from 1 to infinity (or a big number like \fIFLT_MAX\fR from \fI<float\&.h>\fR), which we have decided against\&.
+.SH "HISTORY"
+.sp
+\fBenum\fR is a fusion of GNU seq and jot, feature\-wise\&. At the core both tools print sequences of numbers\&. GNU seq has a clean interface but very limited functionality\&. jot on the other hand offers more advanced features, like producing random numbers, at the cost of a rather unfriendly interface\&.
+.sp
+With \fBenum\fR we try to offer a tool with the power of jot and a usable, easily memorable interface\&. \fBenum\fR is licensed under a BSD license and written in C89 for maximum portability\&.
+.sp
+The following sections take a look at the differences in detail\&.
+.SH "COMPARISON TO JOT"
+.sp
+Using \fBenum\fR instead of jot offers two main advantages:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+improved usability and
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+uniform behavior across distributions and operating systems\&.
+.RE
+.sp
+As of 2010\-10\-03, jot implementations still differ subtly between DragonFlyBSD, FreeBSD, MirOS BSD, NetBSD, OpenBSD, and OS X\&. For instance the command \fIjot \- 0 5\fR produces
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+6 integers from 0 to 5 on FreeBSD and OS X,
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+0 1 2 3 4 5
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+100 integers from 0 to 99 on NetBSD, and
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+0 1 2 [\&.\&.] 97 98 99
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+100 integers from 0 to 5 (with consecutive duplicates) on DragonFlyBSD, MirOS BSD, and OpenBSD\&.
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+0 0 0 0 0 0 0 0 0 0 1 1 [\&.\&.] 4 4 5 5 5 5 5 5 5 5 5 5
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.sp
+Basically, the full feature set of jot plus a few enhancements is contained in \fBenum\fR\&. Names of parameters have been retained for increased compatibility, e\&.g\&. \fB\-p 2\fR works with \fBenum\fR as it does with jot:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# jot \-p 2 3
+1\&.00
+2\&.00
+3\&.00
+
+# enum \-p 2 3
+1\&.00
+2\&.00
+3\&.00
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Please see \fBOPTIONS\fR above for further details\&.
+.SS "ADDITIONAL FEATURES"
+.sp
+The extra features that \fBenum\fR offers over jot include:
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBMORE MEMORABLE COMMAND LINE USAGE\fR
+.RS 4
+.sp
+In order to produce 3 random numbers between 1 and 10 (inclusively), you would run
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+jot \-r 3 1 10
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+with jot\&. We find these alternative calls to \fBenum\fR more intuitive:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+enum \-r 1 \&.\&. 3x \&.\&. 10
+enum \-r 1 3x 10
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBCUSTOM RESOLUTION OF RANDOM\fR
+.RS 4
+.sp
+With \fBenum\fR you can specify that the possible values to be randomly selected from have a particular spacing\&. These two cases illustrate the difference between a gap of 2 and 3:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# enum \-r 4 \&.\&. 100x 2 \&.\&. 10 | sort \-u \-n
+4
+6
+8
+10
+
+# enum \-r 4 \&.\&. 100x 3 \&.\&. 10 | sort \-u \-n
+4
+7
+10
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBSUPPORT FOR SEVERAL PLACEHOLDERS IN FORMAT STRINGS\fR
+.RS 4
+.sp
+jot on DragonFlyBSD, FreeBSD, MirOS BSD, OpenBSD, and OS X:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# jot \-w %g%g 3
+jot: too many conversions
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+jot on NetBSD:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# jot \-w %g%g 3
+jot: unknown or invalid format `%g%g\*(Aq
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+\fBenum\fR on any platform:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# enum \-f %g%g 3
+11
+22
+33
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBSUPPORT FOR ESCAPE SEQUENCES\fR
+.RS 4
+.sp
+None of the jot implementations we tested (DragonFlyBSD, FreeBSD, MirOS BSD, NetBSD, OpenBSD, and OS X) supports escape sequences, say "\en", in \fIFORMAT\fR:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# jot \-w \*(Aq%g\ex41\*(Aq 1
+1\ex41
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+\fBenum\fR is able to unescape "\ex41" properly:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# enum \-w \*(Aq%g\ex41\*(Aq 1
+1A
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+On a side note, "\ex25" produces a literal "%"; it does not make a placeholder:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# enum \-w \*(Aq%g \ex25g\*(Aq 1
+1 %g
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNULL BYTES AS SEPARATOR\fR
+.RS 4
+.sp
+When using format strings containing spaces, you may run into trouble in contexts like for loops or xargs: spaces are treated as separators which breaks up your strings in pieces:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# enum \-f \*(Aqsheep number %d\*(Aq 2 | xargs \-n 1 echo
+sheep
+number
+1
+sheep
+number
+2
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+To prevent this, you could pass \fB\-\-null\fR to both \fBenum\fR and xargs:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# enum \-\-null \-f \*(Aqsheep number %d\*(Aq 2 | xargs \-\-null \-n 1 echo
+sheep number 1
+sheep number 2
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.SS "DIFFERENCES"
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBHANDLING OF FORMATS WITHOUT PLACEHOLDERS\fR
+.RS 4
+.sp
+In contrast to jot, \fBenum\fR does not append the current value if the formatting string does not contain a placeholder\&. Behavior of jot:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# jot 3 \-w test_
+test_1
+test_2
+test_3
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Behavior of \fBenum\fR:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# enum \-w test_ 3
+test_
+test_
+test_
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+In order to achieve jot\(cqs output with \fBenum\fR, you should manually append a placeholder:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# enum \-w test_%d 3
+test_1
+test_2
+test_3
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNON-NUMBER VALUES FOR LEFT AND RIGHT\fR
+.RS 4
+.sp
+\fBenum\fR does not support using ASCII characters instead of their numerical values (e\&.g\&. "A" for 65) for \fILEFT\fR and \fIRIGHT\fR\&. With jot you can do:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# jot 3 A
+65
+66
+67
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Inconsistently,
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# jot 3 0
+0
+1
+2
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+jot does not interpret "0" as the ASCII character with code 48\&. We have no intention of duplicating this mix, at the moment\&.
+.RE
+.SH "COMPARISON TO GNU SEQ"
+.sp
+Basically, \fBenum\fR\*(Aqs usage is backwards\-compatible to that of GNU seq\&.
+.SS "ADDITIONAL FEATURES"
+.sp
+The extra features \fBenum\fR offers over GNU seq include:
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBRANDOM NUMBER MODE\fR
+.RS 4
+.sp
+\fBenum\fR supports output of constrained random numbers, e\&.g\&.
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+enum \-r 4 \&.\&. 3x 2\&.0 \&.\&. 11
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+produces three (possibly duplicate) random numbers from the set {4\&.0, 6\&.0, 8\&.0, 10\&.0}\&.
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBSUPPORT FOR INVERSE ORDERING\fR
+.RS 4
+.sp
+In contrast to GNU seq, \fBenum\fR supports enumerating decreasing values:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# seq 3 1
+
+# enum 3 1
+3
+2
+1
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBSUPPORT FOR SEVERAL PLACEHOLDERS IN FORMAT STRINGS\fR
+.RS 4
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# seq \-f %g%g 3
+seq: format `%g%g\*(Aq has too many % directives
+
+# enum \-f %g%g 3
+11
+22
+33
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBSUPPORT FOR ESCAPE SEQUENCES\fR
+.RS 4
+.sp
+GNU seq does not support escape sequences, say "\en", in \fIFORMAT\fR:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# seq \-f \*(Aq%g\ex41\*(Aq 1
+1\ex41
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+In contrast, some of the other seq implementations around do\&. These three behaviours can be observed (as of 2010\-10\-25):
+.sp
+seq of Plan 9, 9base, and GNU seq:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# seq \-f \*(Aq%g\ex41\*(Aq 3
+1\ex41
+2\ex41
+3\ex41
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+seq on FreeBSD and NetBSD:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# seq \-f \*(Aq%g\ex41\*(Aq 1
+1A
+2A
+3A
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+seq on DragonFlyBSD:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# seq \-f \*(Aq%g\ex41\*(Aq 1
+1A3
+2A3
+3A3
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+\fBenum\fR unescape "\ex41" to "A" as well:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# enum \-f \*(Aq%g\ex41\*(Aq 3
+1A
+2A
+3A
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+On a side note, "\ex25" produces a literal "%"; it does not make a placeholder:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# enum \-f \*(Aq%g \ex25g\*(Aq 1
+1 %g
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBOMITTING FINAL NEWLINE\fR
+.RS 4
+.sp
+By specifying \fB\-n\fR as a parameter, you can make \fBenum\fR omit the trailing newline\&.
+.RE
+.SS "DIFFERENCES"
+.sp
+GNU seq\(cqs \fB\-\-equal\-width\fR shortcut \fB\-w\fR conflicts with jot\(cqs \fB\-w word\fR\&. We chose to make \fB\-e\fR the shortcut for \fB\-\-equal\-width\fR in \fBenum\fR, instead\&.
+.sp
+Also, while GNU seq is licensed under GPL v3 or later, \fBenum\fR is licensed under the New BSD license\&.
+.SH "THANKS"
+.sp
+Elias Pipping, Andreas Gunschl, Justin B\&. Rye, David Prevot, Kamil Dudka, Michael Bienia
+.SH "AUTHORS"
+.sp
+Jan Hauke Rahm <jhr@debian\&.org>
+.sp
+Sebastian Pipping <sping@gentoo\&.org>
+.SH "RESOURCES"
+.sp
+Main web site: https://fedorahosted\&.org/enum/
+.sp
+Gitweb: http://git\&.fedorahosted\&.org/git/?p=enum\&.git
+.SH "SEE ALSO"
+.sp
+jot(1), seq(1), printf(3)

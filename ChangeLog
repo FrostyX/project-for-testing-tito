@@ -1,0 +1,37 @@
+2012-02-02  Jan Hauke Rahm  <jhr@debian.org>
+
+	1.1
+	* Allow COUNT to be 0
+	* Fix faulty assertion for COUNT == 1 and no RIGHT given
+	* Add use case 'COUNT .. RIGHT' and explain why other similar use
+	  cases are not implemented in favor of an intuitive interface
+	* Fix report of invalid parameters
+
+2010-12-23  Sebastian Pipping  <sping@gentoo.org>
+
+	1.0.3
+	* Fix linking with --as-needed (thanks to Michael Bienia)
+
+2010-11-02  Sebastian Pipping  <sping@gentoo.org>
+
+	1.0.2
+	* Increase code robustness (thanks to Kamil Dudka)
+
+2010-10-26  Sebastian Pipping  <sping@gentoo.org>
+
+	1.0.1
+	* VPATH build compilation fixes
+
+2010-10-25  Jan Hauke Rahm  <jhr@debian.org>
+
+	* Fix compilation error in test suite during distcheck
+
+2010-10-25  Jan Hauke Rahm  <jhr@debian.org>
+
+	* First stable release: 1.0
+
+
+Copyright (C) 2010-2012, Jan Hauke Rahm <jhr@debian.org>
+Copyright (C) 2010-2012, Sebastian Pipping <sping@gentoo.org>
+Copying and distribution of this file, with or without modification, are
+permitted provided the copyright notice and this notice are preserved.
