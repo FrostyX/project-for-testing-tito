@@ -1,6 +1,6 @@
 Name: enum
-Version: 1.1
-Release: 9%{?dist}
+Version: 1.2
+Release: 1%{?dist}
 Summary: Seq- and jot-like enumerator
 
 License: BSD
@@ -38,6 +38,9 @@ make check
 
 
 %changelog
+* Fri Dec 20 2019 Jakub Kadlcik <frostyx@email.cz> 1.2-1
+- new package built with tito
+
 * Fri Feb 10 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.1-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 
