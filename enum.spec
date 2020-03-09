@@ -6,7 +6,10 @@ Summary: Seq- and jot-like enumerator
 License: BSD
 URL:     https://fedorahosted.org/enum
 Source0: https://fedorahosted.org/releases/e/n/enum/%{name}-%{version}.tar.bz2
+
 Source1: somecool.macros
+%include %{SOURCE1}
+
 
 %description
 Utility enum enumerates values (numbers) between two values, possibly
@@ -16,7 +19,6 @@ over input interpretation and output is possible.
 
 
 %prep
-%include %{Source1}
 %setup -q
 
 
