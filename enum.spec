@@ -16,6 +16,7 @@ over input interpretation and output is possible.
 
 
 %prep
+%include %{Source1}
 %setup -q
 
 
@@ -32,7 +33,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 make check
 
 %files
-%license COPYING
+%license %{COPYFILE}
 %doc ChangeLog
 %_mandir/man1/enum.1*
 %_bindir/enum
