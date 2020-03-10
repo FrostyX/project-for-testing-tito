@@ -10,7 +10,6 @@ Source0: https://fedorahosted.org/releases/e/n/enum/%{name}-%{version}.tar.bz2
 Source1: somecool.macros
 %include %{SOURCE1}
 
-
 %description
 Utility enum enumerates values (numbers) between two values, possibly
 further adjusted by a step and/or a count, all given on the command line.
@@ -38,7 +37,7 @@ make check
 %license %{COPYFILE}
 %doc ChangeLog
 %_mandir/man1/enum.1*
-%_bindir/enum
+%{BINARY}
 
 
 %changelog

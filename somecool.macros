@@ -1,1 +1,2 @@
 %global COPYFILE COPYING
+%global BINARY %_bindir/enum
