@@ -5,7 +5,11 @@ Summary: Seq- and jot-like enumerator
 
 License: BSD
 URL:     https://fedorahosted.org/enum
-Source0: https://fedorahosted.org/releases/e/n/enum/%{name}-%{version}.tar.bz2
+# Sources can be obtained by
+# git clone https://github.com/FrostyX/project-for-testing-tito.git
+# cd project-for-testing-tito
+# tito build --tgz
+Source0: %{name}-%{version}.tar.gz
 
 Source1: somecool.macros
 %include %{SOURCE1}
