@@ -1,5 +1,5 @@
 Name: enum
-Version: 1.2
+Version: 1.3
 Release: 1%{?dist}
 Summary: Seq- and jot-like enumerator
 
@@ -45,6 +45,14 @@ make check
 
 
 %changelog
+* Wed Mar 11 2020 Jakub Kadlcik <frostyx@email.cz> 1.3-1
+- Update source0 (frostyx@email.cz)
+- macro for binary (frostyx@email.cz)
+- uppercase source1 (frostyx@email.cz)
+- use macro in source1 (frostyx@email.cz)
+- source1 (frostyx@email.cz)
+- change (frostyx@email.cz)
+
 * Fri Dec 20 2019 Jakub Kadlcik <frostyx@email.cz> 1.2-1
 - new package built with tito
 
