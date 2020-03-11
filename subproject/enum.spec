@@ -11,8 +11,8 @@ URL:     https://fedorahosted.org/enum
 # tito build --tgz
 Source0: %{name}-%{version}.tar.gz
 
-# Source1: ../somecool.macros
-# %%include %{SOURCE1}
+Source1: somecool.macros
+%include %{SOURCE1}
 
 %description
 Utility enum enumerates values (numbers) between two values, possibly
