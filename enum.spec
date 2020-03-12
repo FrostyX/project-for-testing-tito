@@ -47,6 +47,11 @@ make check
 
 
 %changelog
+* Thu Mar 12 2020 Jakub Kadlcik <frostyx@email.cz> 1.3-1
+- disable source1 (frostyx@email.cz)
+- foo (frostyx@email.cz)
+- Subproject (frostyx@email.cz)
+
 * Wed Mar 11 2020 Jakub Kadlcik <frostyx@email.cz> 1.3-1
 - Update source0 (frostyx@email.cz)
 - macro for binary (frostyx@email.cz)
