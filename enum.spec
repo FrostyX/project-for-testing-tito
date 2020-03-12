@@ -11,8 +11,8 @@ URL:     https://fedorahosted.org/enum
 # tito build --tgz
 Source0: %{name}-%{version}.tar.gz
 
-Source1: somecool.macros
-%include %{SOURCE1}
+# Source1: somecool.macros
+# %%include %{SOURCE1}
 
 %description
 Utility enum enumerates values (numbers) between two values, possibly
@@ -38,10 +38,12 @@ make install DESTDIR=$RPM_BUILD_ROOT
 make check
 
 %files
-%license %{COPYFILE}
+# %%license %{COPYFILE}
+%license COPYING
 %doc ChangeLog
 %_mandir/man1/enum.1*
-%{BINARY}
+# %%{BINARY}
+%_bindir/enum
 
 
 %changelog
