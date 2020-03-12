@@ -1,5 +1,5 @@
 Name: enum
-Version: 1.3
+Version: 1.4
 Release: 1%{?dist}
 Summary: Seq- and jot-like enumerator
 
@@ -47,6 +47,9 @@ make check
 
 
 %changelog
+* Thu Mar 12 2020 Jakub Kadlcik <frostyx@email.cz> 1.4-1
+- 
+
 * Thu Mar 12 2020 Jakub Kadlcik <frostyx@email.cz> 1.3-1
 - disable source1 (frostyx@email.cz)
 - foo (frostyx@email.cz)
